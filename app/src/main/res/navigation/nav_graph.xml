@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/logInFrag">
+    <fragment
+        android:id="@+id/emailSignUpFrag"
+        android:name="com.example.chatter.view.EmailSignUpFrag"
+        android:label="fragment_email_sign_up"
+        tools:layout="@layout/fragment_email_sign_up" >
+        <action
+            android:id="@+id/action_emailSignUpFrag_to_homeFrag"
+            app:destination="@id/homeFrag"
+            app:popUpTo="@id/emailSignUpFrag"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/logInFrag"
+        android:name="com.example.chatter.view.LogInFrag"
+        android:label="fragment_log_in"
+        tools:layout="@layout/fragment_log_in" >
+        <action
+            android:id="@+id/action_logInFrag_to_emailSignUpFrag"
+            app:destination="@id/emailSignUpFrag" />
+        <action
+            android:id="@+id/action_logInFrag_to_homeFrag"
+            app:destination="@id/homeFrag"
+            app:popUpTo="@id/logInFrag"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/homeFrag"
+        android:name="com.example.chatter.view.HomeFrag"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFrag_to_logInFrag"
+            app:destination="@id/logInFrag" />
+    </fragment>
+</navigation>
