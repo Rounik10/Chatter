@@ -10,6 +10,7 @@ class AuthViewModel : ViewModel() {
 
     private val authRepository = AuthRepository()
     var userMutableLiveData: MutableLiveData<FirebaseUser>? = null
+    val currentUid = MutableLiveData<String>()
 
     fun registerWithEmailPass(email: TextInputLayout, password: TextInputLayout) {
         if (validEmailPass(email, password)) {
@@ -17,6 +18,7 @@ class AuthViewModel : ViewModel() {
                     email.editText?.text.toString(),
                     password.editText?.text.toString()
             )
+            currentUid.value = userMutableLiveData?.value?.uid
             email.error = null
             password.error = null
         }

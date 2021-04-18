@@ -1,15 +1,19 @@
 package com.example.chatter.view
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
-import com.example.chatter.viewmodel.AuthViewModel
+import androidx.navigation.fragment.findNavController
+import com.example.chatter.R
 import com.example.chatter.databinding.FragmentEmailSignUpBinding
+import com.example.chatter.model.UserModel
+import com.example.chatter.viewmodel.AuthViewModel
+import com.example.chatter.viewmodel.FireStoreViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 class EmailSignUpFrag : Fragment() {
 
@@ -28,17 +32,26 @@ class EmailSignUpFrag : Fragment() {
 
         binding.apply {
             registerBtn.setOnClickListener {
-                if(usernameIpEdt.text.isNullOrBlank()) {
+                if (usernameIpEdt.text.isNullOrBlank()) {
                     usernameIp.error = "Invalid Username"
                 }
                 authViewModel.registerWithEmailPass(
-                    emailIp,
-                    passwordIp
+                        emailIp,
+                        passwordIp
                 )
-
-                if (authViewModel.userMutableLiveData == null) {
+                val mAuth = FirebaseAuth.getInstance()
+                val currentUser = mAuth.currentUser
+                if (currentUser == null) {
                     Toast.makeText(context, "Registration Failed", Toast.LENGTH_SHORT).show()
                 } else {
+                    FireStoreViewModel().addUser(
+                            UserModel(
+                                    currentUser.uid,
+                                    binding.usernameIpEdt.text.toString(),
+                                    binding.emailIpEdt.text.toString()
+                            )
+                    )
+                    findNavController().navigate(R.id.action_logInFrag_to_homeFrag)
                     Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
                 }
             }

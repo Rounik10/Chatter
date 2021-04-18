@@ -9,7 +9,7 @@ class AuthRepository {
     private val mAuth: FirebaseAuth = FirebaseAuth.getInstance()
     val userMutableLiveData = MutableLiveData<FirebaseUser>()
 
-    fun registerWithEmailPass(email: String, password: String) : MutableLiveData<FirebaseUser> {
+    fun registerWithEmailPass(email: String, password: String): MutableLiveData<FirebaseUser> {
         mAuth.createUserWithEmailAndPassword(email, password).addOnSuccessListener {
             userMutableLiveData.value = it.user
         }.addOnFailureListener {
@@ -20,18 +20,19 @@ class AuthRepository {
 
     fun loginWithEmailPassword(email: String, password: String) : MutableLiveData<FirebaseUser> {
         mAuth.signInWithEmailAndPassword(email, password).addOnSuccessListener {
-            userMutableLiveData.value = it.user
+            val result = it.user
+            userMutableLiveData.value = result
         }.addOnFailureListener {
             it.printStackTrace()
         }
         return userMutableLiveData
     }
 
-    fun googleSignUp(credential: GoogleAuthCredential) {
-        mAuth.signInWithCredential(credential).addOnSuccessListener {
-            userMutableLiveData.value = it.user
-        }.addOnFailureListener {
-            it.printStackTrace()
-        }
-    }
+//    fun googleSignUp(credential: GoogleAuthCredential) {
+//        mAuth.signInWithCredential(credential).addOnSuccessListener {
+//            userMutableLiveData.value = it.user
+//        }.addOnFailureListener {
+//            it.printStackTrace()
+//        }
+//    }
 }

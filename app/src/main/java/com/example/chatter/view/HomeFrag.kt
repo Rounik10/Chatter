@@ -15,6 +15,7 @@ class HomeFrag : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
     private val binding get() = _binding!!
+    private val mAuth = FirebaseAuth.getInstance()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -23,7 +24,7 @@ class HomeFrag : Fragment() {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         binding.logoutBtn.setOnClickListener {
-            FirebaseAuth.getInstance().signOut()
+            mAuth.signOut()
             Toast.makeText(context, "Logged Out", Toast.LENGTH_SHORT).show()
             findNavController().navigate(R.id.action_homeFrag_to_logInFrag)
         }
