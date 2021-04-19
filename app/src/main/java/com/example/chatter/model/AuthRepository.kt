@@ -11,5 +11,4 @@ class AuthRepository {
     fun loginWithEmailPassword(email: String, password: String) =
         mAuth.signInWithEmailAndPassword(email, password)
 
-    fun getCurrentUser() = mAuth.currentUser
 }

@@ -2,6 +2,7 @@ package com.example.chatter.view.chat
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -11,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.edit
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -66,7 +68,7 @@ class HomeFrag : Fragment() {
         }
 
         binding.channelsView.setChannelItemClickListener {
-            val action = HomeFragDirections.actionHomeFragToChatFragment(it.id)
+            val action = HomeFragDirections.actionHomeFragToChatFragment("messaging:${it.id}")
             findNavController().navigate(action)
         }
 
@@ -88,7 +90,6 @@ class HomeFrag : Fragment() {
         listHeaderViewModel.bindView(binding.channelListHeaderView, viewLifecycleOwner)
         listViewModel.bindView(binding.channelsView, viewLifecycleOwner)
     }
-
 
     private fun setUpDrawer() {
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -115,6 +116,12 @@ class HomeFrag : Fragment() {
             FirebaseAuth.getInstance().signOut()
         }
 
+        val pref = requireActivity().getSharedPreferences("ChatUser", Context.MODE_PRIVATE)
+        pref.edit {
+            this.clear()
+            this.commit()
+        }
+
         builder.setNegativeButton("No") { _, _ -> }
         builder.setTitle("Logout?")
         builder.setMessage("Are you sure you want to logout?")
@@ -138,6 +145,14 @@ class HomeFrag : Fragment() {
                     Log.d(TAG, result.error().message.toString())
                 }
             }
+        }
+
+        val pref = requireActivity().getSharedPreferences("ChatUser",Context.MODE_PRIVATE)
+        pref.edit {
+            this.putString("id", args.chatUser.uid)
+            this.putString("name", args.chatUser.name)
+            this.putString("email", args.chatUser.email)
+            this.commit()
         }
     }
 

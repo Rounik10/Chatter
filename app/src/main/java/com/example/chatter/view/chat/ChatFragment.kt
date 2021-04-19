@@ -1,10 +1,11 @@
-package com.example.chatter
+package com.example.chatter.view.chat
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import com.example.chatter.databinding.FragmentChatBinding
@@ -27,6 +28,7 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         _binging = FragmentChatBinding.inflate(inflater, container, false)
+        (requireActivity() as AppCompatActivity).supportActionBar?.hide()
 
         binding.messagesHeaderView.setBackButtonClickListener {
             requireActivity().onBackPressed()
@@ -38,7 +40,7 @@ class ChatFragment : Fragment() {
     }
 
     private fun setUpMessages() {
-        val factory = MessageListViewModelFactory("messaging:${args.channelId}")
+        val factory = MessageListViewModelFactory(args.channelId)
 
         val messageListHeaderViewBinding: MessageListHeaderViewModel by viewModels { factory }
         val messageListViewModel: MessageListViewModel by viewModels { factory }

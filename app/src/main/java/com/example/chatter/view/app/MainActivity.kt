@@ -1,5 +1,6 @@
 package com.example.chatter.view.app
 
+import android.content.Context
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.NavController
@@ -8,10 +9,7 @@ import com.example.chatter.R
 import com.example.chatter.databinding.ActivityMainBinding
 import com.example.chatter.model.UserModel
 import com.example.chatter.view.auth.LogInFragDirections
-import com.example.chatter.viewmodel.AuthViewModel
-import com.example.chatter.viewmodel.FireStoreViewModel
 import io.getstream.chat.android.client.ChatClient
-import io.getstream.chat.android.client.models.name
 
 class MainActivity : AppCompatActivity() {
 
@@ -27,19 +25,16 @@ class MainActivity : AppCompatActivity() {
         navController = findNavController(R.id.nav_host_fragment)
 
         if (navController.currentDestination?.id == R.id.logInFrag) {
-            val authViewModel = AuthViewModel()
-            val currentUser = client.getCurrentUser()
+            val currentUser = getSharedPreferences("ChatUser", Context.MODE_PRIVATE)
 
-            if (currentUser != null) {
-                val user = UserModel(currentUser.id, currentUser.name, currentUser.extraData["email"].toString())
+            val id = currentUser.getString("id", "")!!
+            val name = currentUser.getString("name", "")!!
+            val email = currentUser.getString("email", "")!!
+
+            if (id != "") {
+                val user = UserModel(id, name, email)
                 val action = LogInFragDirections.actionLogInFragToHomeFrag(user)
                 navController.navigate(action)
-            } else if (authViewModel.getUid().isNotBlank()) {
-                FireStoreViewModel().getUser(authViewModel.getUid()).addOnSuccessListener {
-                    val user = it.toObject(UserModel::class.java)!!
-                    val action = LogInFragDirections.actionLogInFragToHomeFrag(user)
-                    navController.navigate(action)
-                }
             }
         }
     }

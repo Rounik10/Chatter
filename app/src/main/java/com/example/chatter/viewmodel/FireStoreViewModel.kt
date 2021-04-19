@@ -15,15 +15,8 @@ import java.util.*
 class FireStoreViewModel {
     private val db = FirebaseFirestore.getInstance()
     private val userCollection = db.collection("users")
-    val userModel = MutableLiveData<UserModel>()
 
-    fun addUser(user: UserModel?) {
-        user?.let {
-            GlobalScope.launch(Dispatchers.IO) {
-                userCollection.document(user.uid).set(it)
-            }
-        }
-    }
+    fun addUser(user: UserModel) = userCollection.document(user.uid).set(user)
 
     fun getUser(uid: String) : Task<DocumentSnapshot> = userCollection.document(uid).get()
 }

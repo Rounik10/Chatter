@@ -52,6 +52,8 @@ class LogInFrag : Fragment() {
             val loginTask = authViewModel.loginWithEmailPass(binding.emailIp, binding.passwordIp)
             if (loginTask == null) {
                 Toast.makeText(context, "Login Failed", Toast.LENGTH_SHORT).show()
+                loginBtn.isEnabled = true
+                loginProgress.isVisible = false
                 return
             }
             GlobalScope.launch(Dispatchers.IO) {

@@ -20,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:text="@string/user_name"
+        android:textColor="@color/primaryColor"
         android:textSize="26sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@id/avatar_view"

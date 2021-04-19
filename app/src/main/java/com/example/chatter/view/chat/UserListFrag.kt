@@ -3,6 +3,7 @@ package com.example.chatter.view.chat
 import android.os.Bundle
 import android.util.Log
 import android.view.*
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -23,7 +24,7 @@ class UserListFrag : Fragment() {
     private lateinit var searchView: SearchView
     private val userAdapter by lazy { UserListAdapter() }
 
-    val client = ChatClient.instance()
+    private val client = ChatClient.instance()
 
     override fun onCreateView(
             inflater: LayoutInflater,
@@ -38,6 +39,13 @@ class UserListFrag : Fragment() {
         setUpRecyclerView()
         queryAllUsers()
 
+        binding.createGroupBtn.setOnClickListener {
+            val success = userAdapter.createGroup(it)
+            if(!success) {
+                Toast.makeText(context, "Select at least 2 people", Toast.LENGTH_SHORT).show()
+            }
+        }
+
         setHasOptionsMenu(true)
         return binding.root
     }
@@ -45,7 +53,6 @@ class UserListFrag : Fragment() {
     private fun setUpRecyclerView() {
         binding.usersRecycler.layoutManager = LinearLayoutManager(context)
         binding.usersRecycler.adapter = userAdapter
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
@@ -110,4 +117,5 @@ class UserListFrag : Fragment() {
             }
         }
     }
+
 }
