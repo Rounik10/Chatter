@@ -3,8 +3,14 @@ package com.example.chatter.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.chatter.model.AuthRepository
+import com.google.android.gms.tasks.Task
 import com.google.android.material.textfield.TextInputLayout
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseUser
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 
 class AuthViewModel : ViewModel() {
 
@@ -14,24 +20,31 @@ class AuthViewModel : ViewModel() {
 
     fun registerWithEmailPass(email: TextInputLayout, password: TextInputLayout) {
         if (validEmailPass(email, password)) {
-            userMutableLiveData = authRepository.registerWithEmailPass(
-                    email.editText?.text.toString(),
-                    password.editText?.text.toString()
-            )
-            currentUid.value = userMutableLiveData?.value?.uid
-            email.error = null
-            password.error = null
+           authRepository.registerWithEmailPass(
+               email.editText?.text.toString(),
+               password.editText?.text.toString()
+           ).addOnSuccessListener {
+               userMutableLiveData = MutableLiveData()
+               userMutableLiveData!!.value = it.user
+               currentUid.value = userMutableLiveData!!.value?.uid
+               email.error = null
+               password.error = null
+           }
         }
     }
 
-    fun loginWithEmailPass(email: TextInputLayout, password: TextInputLayout) {
-        if (validEmailPass(email, password)) {
-            authRepository.loginWithEmailPassword(
-                email.editText?.text.toString(),
-                password.editText?.text.toString()
-            )
-            userMutableLiveData = authRepository.userMutableLiveData
+    fun getUid(): String {
+        val user = authRepository.getCurrentUser()
+        return user?.uid ?: ""
+    }
+
+    fun loginWithEmailPass(email: TextInputLayout, password: TextInputLayout) : Task<AuthResult>? {
+        return if (validEmailPass(email, password)) {
+            val emailText = email.editText?.text.toString()
+            val passwordText = password.editText?.text.toString()
+            authRepository.loginWithEmailPassword(email = emailText, password = passwordText)
         }
+        else null
     }
 
     private fun validEmailPass(

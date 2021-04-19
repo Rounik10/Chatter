@@ -6,7 +6,7 @@
     app:startDestination="@id/logInFrag">
     <fragment
         android:id="@+id/emailSignUpFrag"
-        android:name="com.example.chatter.view.EmailSignUpFrag"
+        android:name="com.example.chatter.view.auth.EmailSignUpFrag"
         android:label="fragment_email_sign_up"
         tools:layout="@layout/fragment_email_sign_up" >
         <action
@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/logInFrag"
-        android:name="com.example.chatter.view.LogInFrag"
+        android:name="com.example.chatter.view.auth.LogInFrag"
         android:label="fragment_log_in"
         tools:layout="@layout/fragment_log_in" >
         <action
@@ -31,11 +31,44 @@
     </fragment>
     <fragment
         android:id="@+id/homeFrag"
-        android:name="com.example.chatter.view.HomeFrag"
+        android:name="com.example.chatter.view.chat.HomeFrag"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
             android:id="@+id/action_homeFrag_to_logInFrag"
-            app:destination="@id/logInFrag" />
+            app:destination="@id/logInFrag"
+            app:launchSingleTop="false"
+            app:popUpTo="@id/homeFrag"
+            app:popUpToInclusive="true" />
+        <argument
+            android:name="chatUser"
+            app:argType="com.example.chatter.model.UserModel" />
+        <action
+            android:id="@+id/action_homeFrag_to_userListFrag"
+            app:destination="@id/userListFrag" />
+        <action
+            android:id="@+id/action_homeFrag_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/userListFrag"
+        android:name="com.example.chatter.view.chat.UserListFrag"
+        android:label="fragment_user_list"
+        tools:layout="@layout/fragment_user_list" >
+        <action
+            android:id="@+id/action_userListFrag_to_homeFrag"
+            app:destination="@id/homeFrag" />
+        <action
+            android:id="@+id/action_userListFrag_to_chatFragment"
+            app:destination="@id/chatFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.chatter.ChatFragment"
+        android:label="fragment_chat"
+        tools:layout="@layout/fragment_chat" >
+        <argument
+            android:name="channelId"
+            app:argType="string" />
     </fragment>
 </navigation>

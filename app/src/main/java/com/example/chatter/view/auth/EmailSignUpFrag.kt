@@ -1,4 +1,4 @@
-package com.example.chatter.view
+package com.example.chatter.view.auth
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,7 +8,6 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.example.chatter.R
 import com.example.chatter.databinding.FragmentEmailSignUpBinding
 import com.example.chatter.model.UserModel
 import com.example.chatter.viewmodel.AuthViewModel
@@ -44,14 +43,14 @@ class EmailSignUpFrag : Fragment() {
                 if (currentUser == null) {
                     Toast.makeText(context, "Registration Failed", Toast.LENGTH_SHORT).show()
                 } else {
-                    FireStoreViewModel().addUser(
-                            UserModel(
-                                    currentUser.uid,
-                                    binding.usernameIpEdt.text.toString(),
-                                    binding.emailIpEdt.text.toString()
-                            )
+                    val user = UserModel(
+                            currentUser.uid,
+                            binding.usernameIpEdt.text.toString(),
+                            binding.emailIpEdt.text.toString()
                     )
-                    findNavController().navigate(R.id.action_logInFrag_to_homeFrag)
+                    FireStoreViewModel().addUser(user)
+                    val action = EmailSignUpFragDirections.actionEmailSignUpFragToHomeFrag(user)
+                    findNavController().navigate(action)
                     Toast.makeText(context, "Registration Successful", Toast.LENGTH_SHORT).show()
                 }
             }
